@@ -1,9 +1,14 @@
 package com.example.michael.bubbltask;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.widget.ImageButton;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 import com.activeandroid.ActiveAndroid;
@@ -17,11 +22,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     private List<TaskModel> taskList;
 
-//    @BindView(R.id.floatingActionButton)
-//    private FloatingActionButton addTaskButton;
+    @BindView(R.id.floatingActionButton)
+    public FloatingActionButton addTaskButton;
 
     @BindView(R.id.listView)
-    private ListView listView;
+    public ListView listView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,5 +36,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ActiveAndroid.initialize(this);
         ButterKnife.bind(this);
+        fabListener();
+    }
+
+    private void fabListener() {
+        addTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeFragment();
+            }
+        });
+    }
+
+    private void changeFragment() {
+        Log.i("TEST","presssed");
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.c, new AddTaskFragment());
+        fragmentTransaction.commit();
+
+
+
+
+
+
     }
 }

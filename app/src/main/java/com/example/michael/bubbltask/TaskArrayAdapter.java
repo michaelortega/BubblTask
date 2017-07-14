@@ -27,25 +27,25 @@ public class TaskArrayAdapter extends ArrayAdapter<TaskModel> {
         super(context, resource, textViewResourceId, objects);
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(layoutResource, parent, false);
-
-        TextView taskTextView = (TextView) view.findViewById(R.id.taskTextView);
-        TextView dueTextView = (TextView) view.findViewById(R.id.dueTextView);
-
-        FloatingActionButton addTaskButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
-
-        addTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
-
-    }
+//    @NonNull
+//    @Override
+//    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View view = layoutInflater.inflate(layoutResource, parent, false);
+//
+//        TextView taskTextView = (TextView) view.findViewById(R.id.taskTextView);
+//        TextView dueTextView = (TextView) view.findViewById(R.id.dueTextView);
+//
+//        FloatingActionButton addTaskButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
+//
+//        addTaskButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+//
+//
+//
+//    }
 }
