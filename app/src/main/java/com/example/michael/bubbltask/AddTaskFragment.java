@@ -37,11 +37,10 @@ public class AddTaskFragment extends Fragment {
     private DatePickerDialog.OnDateSetListener dateDialogListener;
     private Calendar calendar;
 
-    private int month;
-    private int day;
-    private int year;
-    private int hour;
-    private int min;
+
+    private String date;
+    private String time;
+
 
 
     @Nullable
@@ -78,8 +77,9 @@ public class AddTaskFragment extends Fragment {
                     //send to activity
                     Bundle taskBundle = new Bundle();
                     taskBundle.putString("task", taskName);
-                    taskBundle.putString("date", dateDue);
-                    taskBundle.putString("time", timeDue);
+                    taskBundle.putString("date", date);
+                    taskBundle.putString("time", time);
+                    Toast.makeText(getActivity(), "Task saved", Toast.LENGTH_LONG).show();
                     getFragmentManager().popBackStack();
                 }
             }
@@ -105,20 +105,20 @@ public class AddTaskFragment extends Fragment {
 
         dateDialogListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int newYear, int newMonth, int newDay) {
-                year = newYear;
-                day = newDay;
-                month = newMonth + 1; //Month is 0 based
+            public void onDateSet(DatePicker datePicker, int year, int newMonth, int day) {
 
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/d/yyyy");
+                int month = newMonth + 1; //Month is 0 based
+
+                SimpleDateFormat inputFormat = new SimpleDateFormat("MM/d/yyyy");
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
                 SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
 
                 String dateStr = String.valueOf(month + "/" + day + "/" + year);
+                date = dateStr;
 
                 Date date;
                 try {
-                    date = sdf.parse(dateStr);
+                    date = inputFormat.parse(dateStr);
                     String dayName = dateFormat.format(date);
                     String monthName = monthFormat.format(date);
                     dateTextView.setText(dayName + ", " + monthName + " " + day);
@@ -144,16 +144,16 @@ public class AddTaskFragment extends Fragment {
 
         timeDialogListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
-            public void onTimeSet(TimePicker timePicker, int newHour, int newMin) {
+            public void onTimeSet(TimePicker timePicker, int hour, int min) {
                 //24 hour time
-                hour = newHour;
-                min = newMin;
-                SimpleDateFormat timeToTwelve = new SimpleDateFormat("");
-                SimpleDateFormat timeFormat = new SimpleDateFormat("a");
+                String timeString = hour+":"+min;
+                time = timeString;
+                SimpleDateFormat inputFormat = new SimpleDateFormat("HH:m");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("h:m aa");
                 Date time;
                 try {
-                    time = timeFormat.parse(String.valueOf(hour + min));
-                    timeDueTextView.setText(time+"  "+timeFormat.format(time));
+                    time = inputFormat.parse(timeString);
+                    timeDueTextView.setText(outputFormat.format(time));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
