@@ -28,6 +28,7 @@
             android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/taskNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -46,6 +47,7 @@
             android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/dateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

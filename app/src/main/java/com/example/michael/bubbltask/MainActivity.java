@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.listView)
     public ListView listView;
 
+    private FragmentTransaction fragmentTransaction;
 
 
     @Override
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         fabListener();
     }
-    
+
     private void fabListener() {
         addTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,14 +52,19 @@ public class MainActivity extends AppCompatActivity {
     private void changeFragment() {
         Log.i("TEST","add task fragment");
         FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.c, new AddTaskFragment());
+        fragmentTransaction.addToBackStack("addFrag");
         fragmentTransaction.commit();
-
-
-
-
-
-
     }
+
+
+//    @Override
+//    public void onBackPressed() {
+//        int fragments = getFragmentManager().getBackStackEntryCount();
+//        if (fragments == 1) {
+//            fragmentTransaction.remove().commit();
+//        }
+//        super.onBackPressed();
+//    }
 }
