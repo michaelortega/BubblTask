@@ -33,8 +33,6 @@ public class AddTaskFragment extends Fragment {
     private int day;
     private int year;
 
-    private final String[] dayOfWeekArr = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-
 
     @Nullable
     @Override
@@ -88,22 +86,26 @@ public class AddTaskFragment extends Fragment {
             public void onDateSet(DatePicker datePicker, int newYear, int newMonth, int newDay) {
                 year = newYear;
                 day = newDay;
-                month = newMonth;
-                String dateSelected = String.valueOf(month + "/" + day + "/" + year);
-                Log.i("t", dateSelected);
+                month = newMonth + 1; //date is 0 based
+
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/d/yyyy");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+                SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
+
+                String dateStr = String.valueOf(month + "/" + day + "/" + year);
+
+                Date date;
                 try {
-                    SimpleDateFormat format = new SimpleDateFormat("d/M/yyyy");
-                    Date date = format.parse(dateSelected);
-                    calendar.setTime(date);
+                    date = sdf.parse(dateStr);
+                    String dayName = dateFormat.format(date);
+                    String monthName = monthFormat.format(date);
+                    dateTextView.setText(dayName + ", " + monthName +" "+ day);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
-                int dayOfWeekNumber = calendar.get(Calendar.DAY_OF_WEEK);
-                Log.i("t", String.valueOf(dayOfWeekNumber));
-                String dayOfWeekName = dayOfWeekArr[dayOfWeekNumber];
 
-                dateTextView.setText(dayOfWeekName + " " + dateSelected);
+
 
 
             }

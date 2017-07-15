@@ -28,6 +28,7 @@
             android:orientation="horizontal">
 
             <EditText
+                android:inputType="none"
                 android:id="@+id/taskNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
