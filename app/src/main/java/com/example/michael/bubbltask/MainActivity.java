@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         fabListener();
     }
-
+    
     private void fabListener() {
         addTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void changeFragment() {
-        Log.i("TEST","presssed");
-
+        Log.i("TEST","add task fragment");
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.c, new AddTaskFragment());
