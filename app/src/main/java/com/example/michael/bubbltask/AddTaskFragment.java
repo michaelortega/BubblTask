@@ -2,6 +2,7 @@ package com.example.michael.bubbltask;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -31,12 +33,15 @@ public class AddTaskFragment extends Fragment {
 
     private Button submitTaskButton;
 
+    private TimePickerDialog.OnTimeSetListener timeDialogListener;
     private DatePickerDialog.OnDateSetListener dateDialogListener;
     private Calendar calendar;
 
     private int month;
     private int day;
     private int year;
+    private int hour;
+    private int min;
 
 
     @Nullable
@@ -69,6 +74,8 @@ public class AddTaskFragment extends Fragment {
                 } else if (timeDue.matches("")) {
                     Toast.makeText(getActivity(), "Please enter a time.", Toast.LENGTH_LONG).show();
                 } else {
+
+                    //send to activity
                     Bundle taskBundle = new Bundle();
                     taskBundle.putString("task", taskName);
                     taskBundle.putString("date", dateDue);
@@ -122,6 +129,38 @@ public class AddTaskFragment extends Fragment {
 
             }
         };
+
+        timeDueTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int min = calendar.get(Calendar.MINUTE);
+                //24 hour time - true
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), timeDialogListener, hour, min, false);
+                timePickerDialog.show();
+            }
+        });
+
+        timeDialogListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int newHour, int newMin) {
+                //24 hour time
+                hour = newHour;
+                min = newMin;
+                SimpleDateFormat timeToTwelve = new SimpleDateFormat("");
+                SimpleDateFormat timeFormat = new SimpleDateFormat("a");
+                Date time;
+                try {
+                    time = timeFormat.parse(String.valueOf(hour + min));
+                    timeDueTextView.setText(time+"  "+timeFormat.format(time));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
     }
 }
 
