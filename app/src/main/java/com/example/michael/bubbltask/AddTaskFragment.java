@@ -45,6 +45,12 @@ public class AddTaskFragment extends Fragment {
         return view;
     }
 
+    private void initComponents() {
+        taskTextView = (TextView) view.findViewById(R.id.taskNameTextView);
+        submitTaskButton = (Button) view.findViewById(R.id.submitTaskButton);
+        dateTextView = view.findViewById(R.id.dateTextView);
+    }
+
     private void initListeners() {
         submitTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,28 +103,13 @@ public class AddTaskFragment extends Fragment {
                 Log.i("t", String.valueOf(dayOfWeekNumber));
                 String dayOfWeekName = dayOfWeekArr[dayOfWeekNumber];
 
-                dateTextView.setText(dayOfWeekName +" "+ dateSelected);
-//
-//
-//
-//
+                dateTextView.setText(dayOfWeekName + " " + dateSelected);
 
-//
-//                dateTextView.setText(dayOfWeek);
-//
-//
+
             }
         };
-
-
     }
-
-    private void initComponents() {
-        taskTextView = (TextView) view.findViewById(R.id.taskNameTextView);
-        submitTaskButton = (Button) view.findViewById(R.id.submitTaskButton);
-        dateTextView = view.findViewById(R.id.dateTextView);
-    }
-
+}
 //    @Override
 //    public void onClick(View view) {
 //
@@ -134,4 +125,5 @@ public class AddTaskFragment extends Fragment {
 //            getFragmentManager().popBackStack();
 //        }
 //    }
-}
+
+
