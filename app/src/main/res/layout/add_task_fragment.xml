@@ -15,25 +15,17 @@
         android:orientation="vertical">
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="1dp"
-            android:text="Task"
-            android:textSize="17dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
-                android:inputType="none"
                 android:id="@+id/taskNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Enter Task Here" />
+                android:hint="Enter Task" />
 
             <View
                 android:layout_width="match_parent"
@@ -48,11 +40,12 @@
             android:orientation="horizontal">
 
             <EditText
+                android:focusable="false"
                 android:id="@+id/dateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Enter Task Here" />
+                android:hint="Enter Date" />
 
             <View
                 android:layout_width="match_parent"
@@ -61,12 +54,39 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/submitTaskButton"
-            android:text="add task"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:focusable="false"
+            android:id="@+id/timeDueTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter Time Due" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"></View>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <Button
+        android:layout_gravity="center"
+        android:id="@+id/submitTaskButton"
+        android:text="add task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </LinearLayout>

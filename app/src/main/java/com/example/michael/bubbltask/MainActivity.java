@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         ActiveAndroid.initialize(this);
         ButterKnife.bind(this);
         fabListener();
+
     }
 
     private void fabListener() {

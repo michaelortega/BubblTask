@@ -24,11 +24,16 @@ import java.util.Date;
 
 public class AddTaskFragment extends Fragment {
     private View view;
+
     private TextView taskTextView;
     private TextView dateTextView;
+    private TextView timeDueTextView;
+
     private Button submitTaskButton;
+
     private DatePickerDialog.OnDateSetListener dateDialogListener;
     private Calendar calendar;
+
     private int month;
     private int day;
     private int year;
@@ -47,6 +52,7 @@ public class AddTaskFragment extends Fragment {
         taskTextView = (TextView) view.findViewById(R.id.taskNameTextView);
         submitTaskButton = (Button) view.findViewById(R.id.submitTaskButton);
         dateTextView = view.findViewById(R.id.dateTextView);
+        timeDueTextView = view.findViewById(R.id.timeDueTextView);
     }
 
     private void initListeners() {
@@ -54,10 +60,19 @@ public class AddTaskFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String taskName = taskTextView.getText().toString();
+                String dateDue = dateTextView.getText().toString();
+                String timeDue = timeDueTextView.getText().toString();
                 if (taskName.matches("")) {
                     Toast.makeText(getActivity(), "Please enter a task name.", Toast.LENGTH_LONG).show();
-
+                } else if (dateDue.matches("")) {
+                    Toast.makeText(getActivity(), "Please enter a date.", Toast.LENGTH_LONG).show();
+                } else if (timeDue.matches("")) {
+                    Toast.makeText(getActivity(), "Please enter a time.", Toast.LENGTH_LONG).show();
                 } else {
+                    Bundle taskBundle = new Bundle();
+                    taskBundle.putString("task", taskName);
+                    taskBundle.putString("date", dateDue);
+                    taskBundle.putString("time", timeDue);
                     getFragmentManager().popBackStack();
                 }
             }
@@ -86,7 +101,7 @@ public class AddTaskFragment extends Fragment {
             public void onDateSet(DatePicker datePicker, int newYear, int newMonth, int newDay) {
                 year = newYear;
                 day = newDay;
-                month = newMonth + 1; //date is 0 based
+                month = newMonth + 1; //Month is 0 based
 
                 SimpleDateFormat sdf = new SimpleDateFormat("MM/d/yyyy");
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
@@ -99,33 +114,16 @@ public class AddTaskFragment extends Fragment {
                     date = sdf.parse(dateStr);
                     String dayName = dateFormat.format(date);
                     String monthName = monthFormat.format(date);
-                    dateTextView.setText(dayName + ", " + monthName +" "+ day);
+                    dateTextView.setText(dayName + ", " + monthName + " " + day);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-
-
 
 
             }
         };
     }
 }
-//    @Override
-//    public void onClick(View view) {
-//
-//        if (taskName.matches("")) {
-//            Toast.makeText(getActivity(), "Please enter a task name.", Toast.LENGTH_LONG).show();
-//
-//        } else {
-//
-//            Log.i("t", "2");
-////        Toast.makeText(getActivity(),"Opening Maps",Toast.LENGTH_LONG).show();
-////        Bundle taskBundle = new Bundle();
-////        taskBundle.putString("name",taskName);
-//            getFragmentManager().popBackStack();
-//        }
-//    }
+
 
 
