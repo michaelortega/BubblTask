@@ -12,21 +12,30 @@ import java.util.List;
 public class TaskModel extends Model{
     @Column(name = "task_name")
     private String taskName;
-    @Column(name = "due")
-    private int timeDue;
+    @Column(name = "date")
+    private String date;
+    @Column(name = "time")
+    private String time;
 
     //return a list of all the task obj in the db
 
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public int getTimeDue() {
-        return timeDue;
-    }
 
     public static List<TaskModel>getAllTasks(){
         return new Select().from(TaskModel.class).execute();
     }
+    public static TaskModel getTaskName(){
+        return new Select().from(TaskModel.class).orderBy("RANDOM()").executeSingle();
+    }
 
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }

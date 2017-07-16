@@ -3,6 +3,7 @@ package com.example.michael.bubbltask;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.activeandroid.ActiveAndroid;
 import com.example.michael.bubbltask.data.TaskModel;
 
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
     }
 
     private void changeFragment() {
-        Log.i("TEST","add task fragment");
+        Log.i("TEST", "add task fragment");
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.c, new AddTaskFragment());
@@ -65,23 +67,19 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
     }
 
 
-
-    public void hideFAB(){
+    public void hideFAB() {
         addTaskButton.hide();
     }
 
-    public void showFAB(){
+    public void showFAB() {
         addTaskButton.show();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        int fragments = getFragmentManager().getBackStackEntryCount();
-//        if (fragments == 1) {
-//            fragmentTransaction.remove().commit();
-//        }
-//        super.onBackPressed();
-//    }
+    @Override
+    public void onBackPressed() {
+        showFAB();
+        super.onBackPressed();
+    }
 
 
 //    @Override
@@ -92,13 +90,24 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
 
     @Override
     public void passTask(String taskName, String date, String time) {
-        Toast.makeText(MainActivity.this,(taskName + time + date),Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, (taskName + time + date), Toast.LENGTH_LONG).show();
 
-        addToDB();
+        addToDB(taskName, date, time);
+        //Calendar calendar = Calendar.getInstance();
+        Log.i("e",TaskModel.getTaskName().toString());
+        setAlarm();
     }
 
-    private void addToDB() {
+    private void setAlarm() {
 
+    }
+
+    private void addToDB(String taskName, String date, String time) {
+        TaskModel newTaskModel = new TaskModel();
+        newTaskModel.setDate(date);
+        newTaskModel.setTaskName(taskName);
+        newTaskModel.setTime(time);
+        newTaskModel.save();
     }
 
 

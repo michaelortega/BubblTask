@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.michael.bubbltask">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name="com.activeandroid.app.Application"
+
         >
         <meta-data android:name="AA_DB_NAME" android:value="bubbltask.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="1" />
