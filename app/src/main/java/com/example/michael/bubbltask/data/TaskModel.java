@@ -11,11 +11,11 @@ import java.util.List;
 @Table(name = "Tasks")
 public class TaskModel extends Model{
     @Column(name = "task_name")
-    private String taskName;
+    public String taskName;
     @Column(name = "date")
-    private String date;
+    public String date;
     @Column(name = "time")
-    private String time;
+    public String time;
 
     //return a list of all the task obj in the db
 
@@ -23,9 +23,9 @@ public class TaskModel extends Model{
     public static List<TaskModel>getAllTasks(){
         return new Select().from(TaskModel.class).execute();
     }
-    public static TaskModel getTaskName(){
-        return new Select().from(TaskModel.class).orderBy("RANDOM()").executeSingle();
-    }
+//    public static TaskModel getTaskName(){
+//        return new Select().from(TaskModel.class).orderBy("RANDOM()").executeSingle();
+//    }
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
@@ -37,5 +37,9 @@ public class TaskModel extends Model{
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public TaskModel() {
+        super();
     }
 }

@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
 
         addToDB(taskName, date, time);
         //Calendar calendar = Calendar.getInstance();
-        Log.i("e",TaskModel.getTaskName().toString());
+        //TaskModel t =TaskModel.getTaskName();
         setAlarm();
     }
 
@@ -104,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
 
     private void addToDB(String taskName, String date, String time) {
         TaskModel newTaskModel = new TaskModel();
-        newTaskModel.setDate(date);
-        newTaskModel.setTaskName(taskName);
-        newTaskModel.setTime(time);
+        newTaskModel.date =date;
+        newTaskModel.taskName = taskName;
+        newTaskModel.time = time;
         newTaskModel.save();
     }
 
