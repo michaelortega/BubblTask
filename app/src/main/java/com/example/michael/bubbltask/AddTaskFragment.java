@@ -40,6 +40,7 @@ public class AddTaskFragment extends Fragment {
     private TimePickerDialog.OnTimeSetListener timeDialogListener;
     private DatePickerDialog.OnDateSetListener dateDialogListener;
     private Calendar calendar;
+    private Calendar calToPass;
 
 
     private String date;
@@ -73,6 +74,7 @@ public class AddTaskFragment extends Fragment {
         dateTextView = view.findViewById(R.id.dateTextView);
         timeDueTextView = view.findViewById(R.id.timeDueTextView);
         ((MainActivity) getActivity()).hideFAB();
+        calToPass = Calendar.getInstance();
 
     }
 
@@ -98,7 +100,9 @@ public class AddTaskFragment extends Fragment {
 //                    taskBundle.putString("time", time);
                    // Toast.makeText(getActivity(), "Task saved", Toast.LENGTH_LONG).show();
                     getFragmentManager().popBackStack();
-                    passData(taskName,date,time);
+
+
+                    passData(taskName,date,time,calToPass);
                     ((MainActivity)getActivity()).showFAB();
                 }
             }
@@ -113,11 +117,12 @@ public class AddTaskFragment extends Fragment {
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
                 int year = calendar.get(Calendar.YEAR);
 
+
                 DatePickerDialog dateDialog = new DatePickerDialog(getActivity(),
                         android.R.style.Theme_DeviceDefault_Light_Dialog,
                         dateDialogListener,
                         year, month, day);
-
+                dateDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
                 dateDialog.show();
             }
         });
@@ -126,8 +131,10 @@ public class AddTaskFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int newMonth, int day) {
 
-                int month = newMonth + 1; //Month is 0 based
-
+                int month = newMonth + 1; //Month is zero based
+                calToPass.set(Calendar.YEAR,year);
+                calToPass.set(Calendar.MONTH,newMonth);
+                calToPass.set(Calendar.DAY_OF_MONTH,day);
                 SimpleDateFormat inputFormat = new SimpleDateFormat("MM/d/yyyy");
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
                 SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
@@ -167,8 +174,12 @@ public class AddTaskFragment extends Fragment {
                 //24 hour time
                 String timeString = hour + ":" + min;
                 time = timeString;
+
+                calToPass.set(Calendar.HOUR_OF_DAY,hour);
+                calToPass.set(Calendar.MINUTE,min);
+
                 SimpleDateFormat inputFormat = new SimpleDateFormat("HH:m");
-                SimpleDateFormat outputFormat = new SimpleDateFormat("h:m aa");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm aa");
                 Date time;
                 try {
                     time = inputFormat.parse(timeString);
@@ -182,8 +193,9 @@ public class AddTaskFragment extends Fragment {
 
     }
 
-   public void passData(String taskName, String date, String time){
-       dataPasser.passTask(taskName,date,time);
+   public void passData(String taskName, String date, String time, Calendar c){
+       dataPasser.passTask(taskName,date,time,c);
+       Log.e("e",String.valueOf(c.getTimeInMillis()));
    }
 
 }

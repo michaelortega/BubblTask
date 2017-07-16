@@ -88,15 +88,6 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
 //        Toast.makeText(MainActivity.this,"MAIN",Toast.LENGTH_LONG).show();
 //    }
 
-    @Override
-    public void passTask(String taskName, String date, String time) {
-        Toast.makeText(MainActivity.this, (taskName + time + date), Toast.LENGTH_LONG).show();
-
-        addToDB(taskName, date, time);
-        //Calendar calendar = Calendar.getInstance();
-        //TaskModel t =TaskModel.getTaskName();
-        setAlarm();
-    }
 
     private void setAlarm() {
 
@@ -111,4 +102,10 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
     }
 
 
+    @Override
+    public void passTask(String taskName, String date, String time, Calendar calendar) {
+        Toast.makeText(MainActivity.this, (taskName + time + date), Toast.LENGTH_LONG).show();
+        addToDB(taskName, date, time);
+        setAlarm(); // // TODO: 7/16/2017  
+    }
 }
