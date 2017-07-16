@@ -1,10 +1,13 @@
 package com.example.michael.bubbltask;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,7 @@ public class AddTaskFragment extends Fragment {
     private TextView taskTextView;
     private TextView dateTextView;
     private TextView timeDueTextView;
+    private FloatingActionButton fab;
 
     private Button submitTaskButton;
 
@@ -41,8 +45,19 @@ public class AddTaskFragment extends Fragment {
     private String date;
     private String time;
 
+    private OnDataPass dataPasser;
 
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity activity;
+        if (context instanceof Activity){
+            activity = (Activity) context;
+            dataPasser = (OnDataPass) activity;
+        }
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -53,10 +68,12 @@ public class AddTaskFragment extends Fragment {
     }
 
     private void initComponents() {
-        taskTextView = (TextView) view.findViewById(R.id.taskNameTextView);
-        submitTaskButton = (Button) view.findViewById(R.id.submitTaskButton);
+        taskTextView = view.findViewById(R.id.taskNameTextView);
+        submitTaskButton = view.findViewById(R.id.submitTaskButton);
         dateTextView = view.findViewById(R.id.dateTextView);
         timeDueTextView = view.findViewById(R.id.timeDueTextView);
+        ((MainActivity) getActivity()).hideFAB();
+
     }
 
     private void initListeners() {
@@ -74,13 +91,14 @@ public class AddTaskFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please enter a time.", Toast.LENGTH_LONG).show();
                 } else {
 
-                    //send to activity
-                    Bundle taskBundle = new Bundle();
-                    taskBundle.putString("task", taskName);
-                    taskBundle.putString("date", date);
-                    taskBundle.putString("time", time);
-                    Toast.makeText(getActivity(), "Task saved", Toast.LENGTH_LONG).show();
+//                    //send to activity
+//                    Bundle taskBundle = new Bundle();
+//                    taskBundle.putString("task", taskName);
+//                    taskBundle.putString("date", date);
+//                    taskBundle.putString("time", time);
+                   // Toast.makeText(getActivity(), "Task saved", Toast.LENGTH_LONG).show();
                     getFragmentManager().popBackStack();
+                    ((MainActivity)getActivity()).showFAB();
                 }
             }
         });
@@ -146,7 +164,7 @@ public class AddTaskFragment extends Fragment {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
                 //24 hour time
-                String timeString = hour+":"+min;
+                String timeString = hour + ":" + min;
                 time = timeString;
                 SimpleDateFormat inputFormat = new SimpleDateFormat("HH:m");
                 SimpleDateFormat outputFormat = new SimpleDateFormat("h:m aa");
@@ -162,6 +180,11 @@ public class AddTaskFragment extends Fragment {
         };
 
     }
+
+   public void passData(String taskName, String date, String time){
+       dataPasser.passTask(taskName,date,time);
+   }
+
 }
 
 

@@ -1,15 +1,16 @@
 package com.example.michael.bubbltask;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.design.widget.FloatingActionButton;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.example.michael.bubbltask.data.TaskModel;
@@ -19,7 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnDataPass {
     private List<TaskModel> taskList;
 
     @BindView(R.id.floatingActionButton)
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FragmentTransaction fragmentTransaction;
 
+    private FragmentManager fragmentManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         fabListener();
 
+
     }
 
     private void fabListener() {
@@ -46,19 +50,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 changeFragment();
+                addTaskButton.setVisibility(View.GONE);
             }
         });
     }
 
     private void changeFragment() {
         Log.i("TEST","add task fragment");
-        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.c, new AddTaskFragment());
-        fragmentTransaction.addToBackStack("addFrag");
+        fragmentTransaction.addToBackStack("");
         fragmentTransaction.commit();
     }
 
+
+
+    public void hideFAB(){
+        addTaskButton.hide();
+    }
+
+    public void showFAB(){
+        addTaskButton.show();
+    }
 
 //    @Override
 //    public void onBackPressed() {
@@ -68,4 +82,18 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        super.onBackPressed();
 //    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(MainActivity.this,"MAIN",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void passTask(String taskName, String date, String time) {
+        Log.e("e",taskName + time + date);
+    }
+
+
 }
