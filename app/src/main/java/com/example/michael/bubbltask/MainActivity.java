@@ -1,15 +1,14 @@
 package com.example.michael.bubbltask;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
     @BindView(R.id.listView)
     public ListView listView;
 
+
     private FragmentTransaction fragmentTransaction;
 
     private FragmentManager fragmentManager;
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
         ActiveAndroid.initialize(this);
         ButterKnife.bind(this);
         fabListener();
+        displayTasks();
 
 
     }
@@ -106,6 +107,20 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
     public void passTask(String taskName, String date, String time, Calendar calendar) {
         Toast.makeText(MainActivity.this, (taskName + time + date), Toast.LENGTH_LONG).show();
         addToDB(taskName, date, time);
-        setAlarm(); // // TODO: 7/16/2017  
+        setAlarm(); // // TODO: 7/16/2017
+    }
+
+    private void updateList(){
+
+    }
+
+    public void displayTasks() {
+        addToDB("take","22","time");
+        List<TaskModel> list = TaskModel.getAllTasks();
+        ArrayAdapter<TaskModel> adapter = new ArrayAdapter<TaskModel>(this,R.layout.list_view_task,taskList);
+        listView.setAdapter(adapter);
+//        for (TaskModel task: list){
+//            String log = "Id: "+task.+" ,Name: " + cn.getName() + " ,Phone: " + cn.getPhoneNumber();
+//        }
     }
 }
