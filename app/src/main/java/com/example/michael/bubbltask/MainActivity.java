@@ -84,15 +84,21 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
 //    }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Toast.makeText(MainActivity.this,"MAIN",Toast.LENGTH_LONG).show();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Toast.makeText(MainActivity.this,"MAIN",Toast.LENGTH_LONG).show();
+//    }
 
     @Override
     public void passTask(String taskName, String date, String time) {
-        Log.e("e",taskName + time + date);
+        Toast.makeText(MainActivity.this,(taskName + time + date),Toast.LENGTH_LONG).show();
+
+        addToDB();
+    }
+
+    private void addToDB() {
+
     }
 
 

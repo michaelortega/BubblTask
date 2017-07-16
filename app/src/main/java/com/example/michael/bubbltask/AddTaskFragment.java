@@ -98,6 +98,7 @@ public class AddTaskFragment extends Fragment {
 //                    taskBundle.putString("time", time);
                    // Toast.makeText(getActivity(), "Task saved", Toast.LENGTH_LONG).show();
                     getFragmentManager().popBackStack();
+                    passData(taskName,date,time);
                     ((MainActivity)getActivity()).showFAB();
                 }
             }
