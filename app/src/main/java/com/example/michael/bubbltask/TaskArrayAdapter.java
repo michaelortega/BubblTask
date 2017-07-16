@@ -23,29 +23,24 @@ public class TaskArrayAdapter extends ArrayAdapter<TaskModel> {
     private int layoutResource;
     private List<TaskModel> list;
 
-    public TaskArrayAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull TaskModel[] objects) {
-        super(context, resource, textViewResourceId, objects);
+    public TaskArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<TaskModel> objects) {
+        super(context, resource, objects);
+        this.context = context;
+        this.list = objects;
     }
 
-//    @NonNull
-//    @Override
-//    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View view = layoutInflater.inflate(layoutResource, parent, false);
-//
-//        TextView taskTextView = (TextView) view.findViewById(R.id.taskTextView);
-//        TextView dueTextView = (TextView) view.findViewById(R.id.dueTextView);
-//
-//        FloatingActionButton addTaskButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
-//
-//        addTaskButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-//
-//
-//
-//    }
+    @NonNull
+   @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.list_view_item_task, parent,false);
+
+        TextView taskTextView = (TextView) view.findViewById(R.id.taskTextView);
+        taskTextView.setText(list.get(position).getTaskName());
+
+        TextView dueTextView = (TextView) view.findViewById(R.id.dueTextView);
+        dueTextView.setText(list.get(position).getDate());
+
+        return view;
+    }
 }

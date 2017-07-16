@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.activeandroid.ActiveAndroid;
 import com.example.michael.bubbltask.data.TaskModel;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -115,9 +116,18 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
     }
 
     public void displayTasks() {
-        addToDB("take","22","time");
-        List<TaskModel> list = TaskModel.getAllTasks();
-        ArrayAdapter<TaskModel> adapter = new ArrayAdapter<TaskModel>(this,R.layout.list_view_task,taskList);
+        addToDB("take","22","time"); // for testing
+        addToDB("take","22","time"); // for testing
+        addToDB("take","22","time"); // for testing
+        addToDB("take","22","time"); // for testing
+        taskList = new ArrayList<>();
+        List<TaskModel> modelList = TaskModel.getAllTasks();
+        Log.e("e","SIZE OF MODEL LIST :  "+modelList.size());
+        for (TaskModel task: modelList){
+            taskList.add(task);
+        }
+        Log.e("e","SIZE OF TASK LIST :  "+taskList.size());
+        TaskArrayAdapter adapter = new TaskArrayAdapter(this,R.layout.list_view_item_task,taskList);
         listView.setAdapter(adapter);
 //        for (TaskModel task: list){
 //            String log = "Id: "+task.+" ,Name: " + cn.getName() + " ,Phone: " + cn.getPhoneNumber();

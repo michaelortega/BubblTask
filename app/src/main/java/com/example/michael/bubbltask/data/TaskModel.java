@@ -42,4 +42,16 @@ public class TaskModel extends Model{
     public TaskModel() {
         super();
     }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
 }
