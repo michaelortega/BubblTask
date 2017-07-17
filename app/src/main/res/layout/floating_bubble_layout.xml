@@ -21,13 +21,6 @@
             android:orientation="vertical">
 
             <!--Icon of floating widget -->
-            <ImageView
-                android:id="@+id/collapsed_iv"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/floating_bubble"
-                tools:ignore="ContentDescription"/>
 
             <!--Close button-->
             <ImageView
@@ -106,4 +99,12 @@
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/collapsed_iv"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/gradient"
+        tools:ignore="ContentDescription" />
 </FrameLayout>

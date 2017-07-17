@@ -46,7 +46,7 @@ public class AddTaskFragment extends Fragment {
     private String date;
     private String time;
 
-    private OnDataPass dataPasser;
+
 
 
 
@@ -56,7 +56,7 @@ public class AddTaskFragment extends Fragment {
         Activity activity;
         if (context instanceof Activity){
             activity = (Activity) context;
-            dataPasser = (OnDataPass) activity;
+//            dataPasser = (OnDataPass) activity;
         }
     }
     @Nullable
@@ -101,9 +101,9 @@ public class AddTaskFragment extends Fragment {
                    // Toast.makeText(getActivity(), "Task saved", Toast.LENGTH_LONG).show();
                     getFragmentManager().popBackStack();
 
-
-                    passData(taskName,date,time,calToPass);
-                    ((MainActivity)getActivity()).showFAB();
+//
+//                    passData(taskName,date,time,calToPass);
+//                    ((MainActivity)getActivity()).showFAB();
                 }
             }
         });
@@ -193,10 +193,10 @@ public class AddTaskFragment extends Fragment {
 
     }
 
-   public void passData(String taskName, String date, String time, Calendar c){
-       dataPasser.passTask(taskName,date,time,c);
-       Log.e("e",String.valueOf(c.getTimeInMillis()));
-   }
+//   public void passData(String taskName, String date, String time, Calendar c){
+//       dataPasser.passTask(taskName,date,time,c);
+//       Log.e("e",String.valueOf(c.getTimeInMillis()));
+//   }
 
 }
 

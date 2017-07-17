@@ -13,9 +13,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-/**
- * Created by Michael on 7/17/2017.
- */
 
 public class FloatingViewService extends Service {
     private WindowManager mWindowManager;

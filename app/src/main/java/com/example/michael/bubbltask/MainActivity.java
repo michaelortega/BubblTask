@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                         "Draw over other app permission not available. Closing the application",
                         Toast.LENGTH_SHORT).show();
 
-                finish();
+                //finish();
             }
 
         } else{
@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("test", String.valueOf(calendar.getTimeInMillis()));
                 addToDB(taskName, date, time);
                 setAlarm(calendar.getTimeInMillis(), taskName);
+                displayBubble(); //// TODO: 7/17/2017  
             }
         }
     }
@@ -271,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayBubble() {
         startService(new Intent(MainActivity.this, FloatingViewService.class));
-        finish();
+        //finish();
     }
 
 }

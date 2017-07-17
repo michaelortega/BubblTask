@@ -30,4 +30,9 @@
         <receiver android:name=".AlarmReceiver"/>
     </application>
 
+    <service
+        android:name="com.example.michael.bubbltask.FloatingViewService"
+        android:enabled="true"
+        android:exported="false"/>
+
 </manifest>
