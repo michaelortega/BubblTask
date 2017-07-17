@@ -1,7 +1,9 @@
 package com.example.michael.bubbltask;
 
+import android.app.AlarmManager;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,12 +12,9 @@ import android.support.design.widget.FloatingActionButton;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager;
     private View context;
+    private int id = 0;
 
 
     public Context getmContext() {
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         //delete
-                        Log.e("e","TO DELETE:: "+ task.taskName);
+                        Log.e("e", "TO DELETE:: " + task.taskName);
                         deleteFromDB(task.getTaskName());
                 }
                 return false;
@@ -139,15 +139,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     private void fabListener() {
         addTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //changeFragment();
-                Intent intent = new Intent(MainActivity.this,AddTaskActivity.class);
-                startActivityForResult(intent,1);
+                Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+                startActivityForResult(intent, 1);
                 hideFAB();
             }
         });
@@ -157,16 +155,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         showFAB();
-        if (data != null){
-        String taskName = data.getStringExtra("task");
-        String date = data.getStringExtra("date");
-        String time = data.getStringExtra("time");
-            Log.e("test",taskName+" "+date+" "+time);
-        Calendar calendar = (Calendar) data.getSerializableExtra("cal");
-        addToDB(taskName, date,time);}
+        if (data != null) {
+            String taskName = data.getStringExtra("task");
+            String date = data.getStringExtra("date");
+            String time = data.getStringExtra("time");
+            Log.e("test", taskName + " " + date + " " + time);
+            Calendar calendar = (Calendar) data.getSerializableExtra("cal");
+            calendar.set(Calendar.SECOND,0);
+            Log.i("test", String.valueOf(calendar.getTimeInMillis()));
+            addToDB(taskName, date, time);
+            setAlarm(calendar.getTimeInMillis(),taskName);
+        }
     }
-
-
 
 
     public void hideFAB() {
@@ -178,8 +178,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
 //    @Override
 //    protected void onResume() {
 //        super.onResume();
@@ -187,8 +185,18 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-    private void setAlarm() {
+    private void setAlarm(long timeInMillis, String taskName) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
+        Intent alertIntent = new Intent(MainActivity.this,AlarmReceiver.class);
+        alertIntent.putExtra("task", taskName);
+
+        id = ++id + 4;
+        alertIntent.putExtra("id", id);
+
+        PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,id,alertIntent,PendingIntent.FLAG_ONE_SHOT);
+
+       alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis,pendingIntent);
     }
 
     private void addToDB(String taskName, String date, String time) {

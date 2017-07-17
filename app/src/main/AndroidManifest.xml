@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.michael.bubbltask">
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
@@ -24,11 +23,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AddTaskActivity"
-            >
+        <activity android:name=".AddTaskActivity">
 
         </activity>
-
+        <receiver android:name=".AlarmReceiver"/>
     </application>
 
 </manifest>
