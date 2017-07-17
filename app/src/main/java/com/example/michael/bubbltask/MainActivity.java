@@ -2,6 +2,8 @@ package com.example.michael.bubbltask;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.FloatingActionButton;
@@ -31,7 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements OnDataPass {
+public class MainActivity extends AppCompatActivity {
     private List<TaskModel> taskList;
 
     @BindView(R.id.floatingActionButton)
@@ -39,12 +41,20 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
 
     public SwipeMenuListView listView;
 
-
+    private Context mContext;
     private FragmentTransaction fragmentTransaction;
 
     private FragmentManager fragmentManager;
     private View context;
 
+
+    public Context getmContext() {
+        return mContext;
+    }
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
         setContentView(R.layout.activity_home);
         ActiveAndroid.initialize(this);
         ButterKnife.bind(this);
+        setmContext(this);
         fabListener();
         initSwipeCreator();
         displayTasks();
@@ -127,29 +138,35 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
                 getResources().getDisplayMetrics());
     }
 
-    public View getContext() {
-        return context;
-    }
 
-    ////////////////////
+
+
     private void fabListener() {
         addTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeFragment();
-                addTaskButton.setVisibility(View.GONE);
+                //changeFragment();
+                Intent intent = new Intent(MainActivity.this,AddTaskActivity.class);
+                startActivityForResult(intent,1);
+                hideFAB();
             }
         });
     }
 
-    private void changeFragment() {
-        Log.i("TEST", "add task fragment");
-        fragmentManager = getFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.f, new AddTaskFragment());
-        fragmentTransaction.addToBackStack("task");
-        fragmentTransaction.commit();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        showFAB();
+        if (data != null){
+        String taskName = data.getStringExtra("task");
+        String date = data.getStringExtra("date");
+        String time = data.getStringExtra("time");
+            Log.e("test",taskName+" "+date+" "+time);
+        Calendar calendar = (Calendar) data.getSerializableExtra("cal");
+        addToDB(taskName, date,time);}
     }
+
+
 
 
     public void hideFAB() {
@@ -160,11 +177,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
         addTaskButton.show();
     }
 
-    @Override
-    public void onBackPressed() {
-        showFAB();
-        super.onBackPressed();
-    }
+
 
 
 //    @Override
@@ -188,16 +201,13 @@ public class MainActivity extends AppCompatActivity implements OnDataPass {
     }
 
 
-    @Override
-    public void passTask(String taskName, String date, String time, Calendar calendar) {
-        Toast.makeText(MainActivity.this, (taskName + time + date), Toast.LENGTH_LONG).show();
-        addToDB(taskName, date, time);
-        setAlarm(); // // TODO: 7/16/2017
-    }
+//    @Override
+//    public void passTask(String taskName, String date, String time, Calendar calendar) {
+//        Toast.makeText(MainActivity.this, (taskName + time + date), Toast.LENGTH_LONG).show();
+//        addToDB(taskName, date, time);
+//        setAlarm(); // // TODO: 7/16/2017
+//    }
 
-    private void updateList() {
-
-    }
 
     public void displayTasks() {
         taskList = new ArrayList<>();

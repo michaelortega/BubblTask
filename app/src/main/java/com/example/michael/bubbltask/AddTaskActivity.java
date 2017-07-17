@@ -2,16 +2,12 @@ package com.example.michael.bubbltask;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -24,10 +20,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by Michael on 7/14/2017.
+ * Created by Michael on 7/17/2017.
  */
 
-public class AddTaskFragment extends Fragment {
+public class AddTaskActivity extends Activity {
     private View view;
 
     private TextView taskTextView;
@@ -46,36 +42,30 @@ public class AddTaskFragment extends Fragment {
     private String date;
     private String time;
 
-    private OnDataPass dataPasser;
-
-
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Activity activity;
-        if (context instanceof Activity){
-            activity = (Activity) context;
-            dataPasser = (OnDataPass) activity;
-        }
-    }
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.add_task_activity, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.add_task_activity);
+
         initComponents();
         initListeners();
-        return view;
+
     }
 
     private void initComponents() {
-        taskTextView = view.findViewById(R.id.taskNameTextView);
-        submitTaskButton = view.findViewById(R.id.submitTaskButton);
-        dateTextView = view.findViewById(R.id.dateTextView);
-        timeDueTextView = view.findViewById(R.id.timeDueTextView);
-        ((MainActivity) getActivity()).hideFAB();
+        taskTextView = findViewById(R.id.taskNameTextView);
+        submitTaskButton = findViewById(R.id.submitTaskButton);
+        dateTextView = findViewById(R.id.dateTextView);
+        timeDueTextView =findViewById(R.id.timeDueTextView);
         calToPass = Calendar.getInstance();
+    }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void initListeners() {
@@ -86,24 +76,26 @@ public class AddTaskFragment extends Fragment {
                 String dateDue = dateTextView.getText().toString();
                 String timeDue = timeDueTextView.getText().toString();
                 if (taskName.matches("")) {
-                    Toast.makeText(getActivity(), "Please enter a task name.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddTaskActivity.this, "Please enter a task name.", Toast.LENGTH_LONG).show();
                 } else if (dateDue.matches("")) {
-                    Toast.makeText(getActivity(), "Please enter a date.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddTaskActivity.this, "Please enter a date.", Toast.LENGTH_LONG).show();
                 } else if (timeDue.matches("")) {
-                    Toast.makeText(getActivity(), "Please enter a time.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddTaskActivity.this, "Please enter a time.", Toast.LENGTH_LONG).show();
                 } else {
 
-//                    //send to activity
-//                    Bundle taskBundle = new Bundle();
-//                    taskBundle.putString("task", taskName);
-//                    taskBundle.putString("date", date);
-//                    taskBundle.putString("time", time);
-                   // Toast.makeText(getActivity(), "Task saved", Toast.LENGTH_LONG).show();
-                    getFragmentManager().popBackStack();
+                    Intent intent = new Intent();
+                    intent.putExtra("task",taskName);
+                    intent.putExtra("date",dateDue);
+                    intent.putExtra("time",time);
+                    intent.putExtra("cal", calToPass);
+                    setResult(RESULT_OK,intent);
+                    finish();
+                   // Toast.makeText(MainActivity.getContext(), "Task saved", Toast.LENGTH_LONG).show(); // TODO: 7/17/2017
 
 
-                    passData(taskName,date,time,calToPass);
-                    ((MainActivity)getActivity()).showFAB();
+
+
+//                    ((MainActivity)getActivity()).showFAB();
                 }
             }
         });
@@ -118,7 +110,7 @@ public class AddTaskFragment extends Fragment {
                 int year = calendar.get(Calendar.YEAR);
 
 
-                DatePickerDialog dateDialog = new DatePickerDialog(getActivity(),
+                DatePickerDialog dateDialog = new DatePickerDialog(AddTaskActivity.this,
                         android.R.style.Theme_DeviceDefault_Light_Dialog,
                         dateDialogListener,
                         year, month, day);
@@ -163,7 +155,7 @@ public class AddTaskFragment extends Fragment {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int min = calendar.get(Calendar.MINUTE);
                 //24 hour time - true
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), timeDialogListener, hour, min, false);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(AddTaskActivity.this, timeDialogListener, hour, min, false);
                 timePickerDialog.show();
             }
         });
@@ -193,12 +185,5 @@ public class AddTaskFragment extends Fragment {
 
     }
 
-   public void passData(String taskName, String date, String time, Calendar c){
-       dataPasser.passTask(taskName,date,time,c);
-       Log.e("e",String.valueOf(c.getTimeInMillis()));
-   }
 
 }
-
-
-
