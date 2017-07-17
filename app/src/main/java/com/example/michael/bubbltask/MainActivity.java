@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private View context;
     private int id = 0;
 
+    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+
 
     public Context getmContext() {
         return mContext;
@@ -67,8 +73,23 @@ public class MainActivity extends AppCompatActivity {
         initSwipeCreator();
         displayTasks();
 
+        //Check if the application has draw over other apps permission or not?
+        //This permission is by default available for API<23. But for API > 23
+        //you have to ask for the permission in runtime.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
+        } else {
+            displayBubble();
+        }
+
 
     }
+
 
     private void initSwipeCreator() {
         listView = (SwipeMenuListView) findViewById(R.id.listView);
@@ -153,18 +174,35 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        showFAB();
-        if (data != null) {
-            String taskName = data.getStringExtra("task");
-            String date = data.getStringExtra("date");
-            String time = data.getStringExtra("time");
-            Log.e("test", taskName + " " + date + " " + time);
-            Calendar calendar = (Calendar) data.getSerializableExtra("cal");
-            calendar.set(Calendar.SECOND,0);
-            Log.i("test", String.valueOf(calendar.getTimeInMillis()));
-            addToDB(taskName, date, time);
-            setAlarm(calendar.getTimeInMillis(),taskName);
+        if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
+
+            //Check if the permission is granted or not.
+            if (resultCode == RESULT_OK) {
+                displayBubble();
+            } else { //Permission is not available
+                Toast.makeText(this,
+                        "Draw over other app permission not available. Closing the application",
+                        Toast.LENGTH_SHORT).show();
+
+                finish();
+            }
+
+        } else{
+
+
+            super.onActivityResult(requestCode, resultCode, data);
+            showFAB();
+            if (data != null) {
+                String taskName = data.getStringExtra("task");
+                String date = data.getStringExtra("date");
+                String time = data.getStringExtra("time");
+                Log.e("test", taskName + " " + date + " " + time);
+                Calendar calendar = (Calendar) data.getSerializableExtra("cal");
+                calendar.set(Calendar.SECOND, 0);
+                Log.i("test", String.valueOf(calendar.getTimeInMillis()));
+                addToDB(taskName, date, time);
+                setAlarm(calendar.getTimeInMillis(), taskName);
+            }
         }
     }
 
@@ -188,15 +226,15 @@ public class MainActivity extends AppCompatActivity {
     private void setAlarm(long timeInMillis, String taskName) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        Intent alertIntent = new Intent(MainActivity.this,AlarmReceiver.class);
+        Intent alertIntent = new Intent(MainActivity.this, AlarmReceiver.class);
         alertIntent.putExtra("task", taskName);
 
         id = ++id + 4;
         alertIntent.putExtra("id", id);
 
-        PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,id,alertIntent,PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, alertIntent, PendingIntent.FLAG_ONE_SHOT);
 
-       alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis,pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
     }
 
     private void addToDB(String taskName, String date, String time) {
@@ -229,6 +267,11 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
 
+    }
+
+    private void displayBubble() {
+        startService(new Intent(MainActivity.this, FloatingViewService.class));
+        finish();
     }
 
 }
