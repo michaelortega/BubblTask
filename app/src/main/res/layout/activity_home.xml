@@ -7,12 +7,19 @@
     android:id="@+id/c"
     android:weightSum="1">
 
-    <ListView
+    <LinearLayout
+    android:id="@+id/f"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </ListView>
+   </com.baoyz.swipemenulistview.SwipeMenuListView>
+
+</LinearLayout>
 
 
     <android.support.design.widget.FloatingActionButton
