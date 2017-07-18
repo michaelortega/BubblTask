@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("test", String.valueOf(calendar.getTimeInMillis()));
                 addToDB(taskName, date, time);
                 setAlarm(calendar.getTimeInMillis(), taskName);
-                displayBubble(); //// TODO: 7/17/2017  
+                displayBubble(); //// TODO: 7/17/2017
             }
         }
     }
@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         newTaskModel.time = time;
         newTaskModel.save();
         displayTasks();
+        FloatingViewService.increaseSize();
     }
 
 
@@ -272,7 +273,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayBubble() {
         startService(new Intent(MainActivity.this, FloatingViewService.class));
-        //finish();
     }
 
 }

@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
+
 public class FloatingViewService extends Service {
     private WindowManager mWindowManager;
     private View mFloatingView;
+    private static ImageView imageView;
 
     public FloatingViewService() {
     }
@@ -31,6 +32,8 @@ public class FloatingViewService extends Service {
         super.onCreate();
         //Inflate the floating view layout we created
         mFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_bubble_layout, null);
+
+        imageView = (ImageView) mFloatingView.findViewById(R.id.collapsed_iv);
 
         //Add the view to the window.
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -190,5 +193,12 @@ public class FloatingViewService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (mFloatingView != null) mWindowManager.removeView(mFloatingView);
+    }
+
+    public static void increaseSize(){
+        android.view.ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+        layoutParams.width = imageView.getWidth() + 10;
+        layoutParams.height = imageView.getHeight() + 10;
+        imageView.setLayoutParams(layoutParams);
     }
 }
