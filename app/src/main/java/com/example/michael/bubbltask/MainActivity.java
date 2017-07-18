@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
@@ -193,15 +194,19 @@ public class MainActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
             showFAB();
             if (data != null) {
-                String taskName = data.getStringExtra("task");
-                String date = data.getStringExtra("date");
-                String time = data.getStringExtra("time");
-                Log.e("test", taskName + " " + date + " " + time);
                 Calendar calendar = (Calendar) data.getSerializableExtra("cal");
                 calendar.set(Calendar.SECOND, 0);
+
+                String taskName = data.getStringExtra("task");
+                String date = data.getStringExtra("date");
+                String time = AddTaskActivity.getCivilianTimeStr(data.getStringExtra("time"));
+
+                Log.e("test", taskName + " " + date + " " + time);
                 Log.i("test", String.valueOf(calendar.getTimeInMillis()));
+                Log.i("test","TIME  "+time);
                 addToDB(taskName, date, time);
                 setAlarm(calendar.getTimeInMillis(), taskName);
+                Toast.makeText(MainActivity.this, "Task saved", Toast.LENGTH_LONG).show();
 
             }
         }
@@ -250,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
         Intent alertIntent = new Intent(MainActivity.this, AlarmReceiver.class);
         alertIntent.putExtra("task", taskName);
 
-        id = ++id + 4;
+        id = ++id + 4; //// TODO: 7/18/2017 uniq
         alertIntent.putExtra("id", id);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, alertIntent, PendingIntent.FLAG_ONE_SHOT);

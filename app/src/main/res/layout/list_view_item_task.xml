@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="4">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></LinearLayout>
     <TextView
         android:id="@+id/taskTextView"
-        android:padding="20sp"
-        android:textSize="15sp"
-        android:layout_weight="5"
-        android:text="Take out the trash"
-        android:gravity="center"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:padding="20sp"
+        android:text="Take out the trash"
+        android:textSize="15sp" />
+
     <TextView
         android:id="@+id/dueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_weight="1"
         android:gravity="center"
         android:padding="20sp"
-        android:layout_weight="1.5"
-        android:text="5:00 AM"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" />
-
+        android:text="5:00 AM" />
 
 
 </LinearLayout>

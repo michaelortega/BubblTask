@@ -90,7 +90,7 @@ public class AddTaskActivity extends Activity {
                     intent.putExtra("cal", calToPass);
                     setResult(RESULT_OK,intent);
                     finish();
-                   // Toast.makeText(MainActivity.getContext(), "Task saved", Toast.LENGTH_LONG).show(); // TODO: 7/17/2017
+
 
 
 
@@ -170,19 +170,25 @@ public class AddTaskActivity extends Activity {
                 calToPass.set(Calendar.HOUR_OF_DAY,hour);
                 calToPass.set(Calendar.MINUTE,min);
 
-                SimpleDateFormat inputFormat = new SimpleDateFormat("HH:m");
-                SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm aa");
-                Date time;
-                try {
-                    time = inputFormat.parse(timeString);
-                    timeDueTextView.setText(outputFormat.format(time));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                timeDueTextView.setText(getCivilianTimeStr(timeString));
 
             }
         };
 
+    }
+
+    public static String  getCivilianTimeStr(String militaryTimeStr){
+        String result ="";
+        Date date;
+        SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm aa");
+        try {
+            date = inputFormat.parse(militaryTimeStr);
+            result = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+            return result;
     }
 
 

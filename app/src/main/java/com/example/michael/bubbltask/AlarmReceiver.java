@@ -21,8 +21,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         String taskName = intent.getStringExtra("task");
-        int id = intent.getIntExtra("id",0);
-        Log.i("test","test");
+        int id = intent.getIntExtra("id", 0);
+        Log.i("test", "test");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -33,9 +33,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setDefaults(Notification.DEFAULT_LIGHTS);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(id,builder.build());
-        FloatingViewService.getInstance().increaseSize();
-
+        notificationManager.notify(id, builder.build());
+        if (FloatingViewService.getInstance() != null) {
+            FloatingViewService.getInstance().increaseSize();
+        }
 
     }
 
