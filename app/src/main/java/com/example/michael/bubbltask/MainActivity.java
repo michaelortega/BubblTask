@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private int id = 0;
 
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+    public static int bubbleHeight = 240;
+    public static int bubbleWidth = 240;
+    public static boolean isAddingTask;
 
 
     public Context getmContext() {
@@ -83,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
-        } else {
-            displayBubble();
         }
 
 
@@ -164,10 +165,10 @@ public class MainActivity extends AppCompatActivity {
         addTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //changeFragment();
                 Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
                 startActivityForResult(intent, 1);
                 hideFAB();
+                isAddingTask = true;
             }
         });
     }
@@ -178,16 +179,15 @@ public class MainActivity extends AppCompatActivity {
 
             //Check if the permission is granted or not.
             if (resultCode == RESULT_OK) {
-                displayBubble();
             } else { //Permission is not available
                 Toast.makeText(this,
                         "Draw over other app permission not available. Closing the application",
                         Toast.LENGTH_SHORT).show();
 
-                //finish();
+
             }
 
-        } else{
+        } else {
 
 
             super.onActivityResult(requestCode, resultCode, data);
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("test", String.valueOf(calendar.getTimeInMillis()));
                 addToDB(taskName, date, time);
                 setAlarm(calendar.getTimeInMillis(), taskName);
-                displayBubble(); //// TODO: 7/17/2017
+
             }
         }
     }
@@ -217,12 +217,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Toast.makeText(MainActivity.this,"MAIN",Toast.LENGTH_LONG).show();
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+
+        if (FloatingViewService.getInstance() != null) {
+            if (FloatingViewService.getInstance().getmFloatingView() != null) {
+                FloatingViewService.getInstance().destroyBubble();
+            }
+        }
+
+
+    }
+
+
+    @Override
+    protected void onPause() {
+
+        //only show bubble when onPause is called
+        if (!isAddingTask) {
+            displayBubble();
+        }
+        isAddingTask = false;
+        super.onPause();
+
+    }
 
     private void setAlarm(long timeInMillis, String taskName) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -245,16 +265,7 @@ public class MainActivity extends AppCompatActivity {
         newTaskModel.time = time;
         newTaskModel.save();
         displayTasks();
-        FloatingViewService.increaseSize();
     }
-
-
-//    @Override
-//    public void passTask(String taskName, String date, String time, Calendar calendar) {
-//        Toast.makeText(MainActivity.this, (taskName + time + date), Toast.LENGTH_LONG).show();
-//        addToDB(taskName, date, time);
-//        setAlarm(); // // TODO: 7/16/2017
-//    }
 
 
     public void displayTasks() {

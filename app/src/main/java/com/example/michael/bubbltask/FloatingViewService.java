@@ -1,9 +1,11 @@
 package com.example.michael.bubbltask;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,10 +18,22 @@ import android.widget.Toast;
 
 public class FloatingViewService extends Service {
     private WindowManager mWindowManager;
+
+    public View getmFloatingView() {
+        return mFloatingView;
+    }
+
     private View mFloatingView;
-    private static ImageView imageView;
+    private ImageView imageView;
+
+    @SuppressLint("StaticFieldLeak")
+    public static FloatingViewService floatingViewService;
 
     public FloatingViewService() {
+    }
+
+    public static FloatingViewService getInstance() {
+        return floatingViewService;
     }
 
     @Override
@@ -34,6 +48,9 @@ public class FloatingViewService extends Service {
         mFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_bubble_layout, null);
 
         imageView = (ImageView) mFloatingView.findViewById(R.id.collapsed_iv);
+        initBubbleSize();
+
+        floatingViewService = this;
 
         //Add the view to the window.
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -63,7 +80,7 @@ public class FloatingViewService extends Service {
             @Override
             public void onClick(View view) {
                 //close the service and remove the from from the window
-                stopSelf();
+                destroyBubble();
             }
         });
 
@@ -178,6 +195,19 @@ public class FloatingViewService extends Service {
         });
     }
 
+    private void initBubbleSize() {
+        android.view.ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+        layoutParams.width = MainActivity.bubbleWidth;
+        layoutParams.height = MainActivity.bubbleHeight;
+        imageView.setLayoutParams(layoutParams);
+    }
+
+
+
+    public void destroyBubble() {
+        stopSelf();
+    }
+
 
     /**
      * Detect if the floating view is collapsed or expanded.
@@ -195,10 +225,15 @@ public class FloatingViewService extends Service {
         if (mFloatingView != null) mWindowManager.removeView(mFloatingView);
     }
 
-    public static void increaseSize(){
+    public void increaseSize(){
         android.view.ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-        layoutParams.width = imageView.getWidth() + 10;
-        layoutParams.height = imageView.getHeight() + 10;
+        layoutParams.width = imageView.getWidth() + 100;
+        layoutParams.height = imageView.getHeight() + 100;
         imageView.setLayoutParams(layoutParams);
+        MainActivity.bubbleHeight = layoutParams.height;
+        MainActivity.bubbleWidth = layoutParams.width;
     }
+
+
+
 }
