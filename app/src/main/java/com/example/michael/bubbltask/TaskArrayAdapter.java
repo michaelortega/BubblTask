@@ -39,6 +39,8 @@ public class TaskArrayAdapter extends ArrayAdapter<TaskModel> {
         taskTextView.setText(list.get(position).getTaskName());
 
         TextView dueTextView = (TextView) view.findViewById(R.id.dueTextView);
+
+
         dueTextView.setText(list.get(position).getTime());
 
         return view;
