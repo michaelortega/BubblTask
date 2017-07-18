@@ -48,33 +48,32 @@ public class TaskArrayAdapter extends ArrayAdapter<TaskModel> {
         String currentDateStr = dateToString(currentDate);
 
         // get string of current date plus one day (Tomorrow)
-        String currentTomStr = tommorrowString(currCal);
-
-
-
+        String currentTomStr = tomorrowString(currCal);
 
 
         long selectedTimeStamp = list.get(position).getTimeStamp();
+
         Calendar selectedCalendar = Calendar.getInstance();
         selectedCalendar.setTimeInMillis(selectedTimeStamp);
+
         Date selectedDateObj = selectedCalendar.getTime();
         String selectedDate = dateToString(selectedDateObj);
-        String selectedTomorrow = tommorrowString(selectedCalendar);
 
-        Log.i("x","CURRENT DATE: " + currentDateStr );
-        Log.i("x","CURRENT Tomorrow DATE: " + currentTomStr);
-        Log.i("x","SELECTED DATE: " + selectedDate );
-        Log.i("x","SELECTED TOMMORROW DATE: " + selectedTomorrow );
+
+        Log.i("x", "CURRENT DATE: " + currentDateStr);
+        Log.i("x", "CURRENT Tomorrow DATE: " + currentTomStr);
+        Log.i("x", "SELECTED DATE: " + selectedDate);
 
 
         String selectedTime = list.get(position).getTime();
 
         if (selectedDate.equals(currentDateStr)) {
             dueTextView.setText("Today  " + selectedTime);
+        } else if (selectedDate.equals(currentTomStr)) {
+            dueTextView.setText("Tomorrow  " + selectedTime);
         } else {
             dueTextView.setText(selectedDate + " " + selectedTime);
         }
-
 
         return view;
     }
@@ -84,9 +83,9 @@ public class TaskArrayAdapter extends ArrayAdapter<TaskModel> {
         return outputFormat.format(date);
     }
 
-    private String tommorrowString(Calendar currentDay){
+    private String tomorrowString(Calendar currentDay) {
         Calendar tomorrow = currentDay;
-        tomorrow.set(Calendar.DAY_OF_WEEK,currentDay.get(Calendar.DAY_OF_WEEK) + 1);
+        tomorrow.set(Calendar.DAY_OF_WEEK, currentDay.get(Calendar.DAY_OF_WEEK) + 1);
         Date tomorrowDateObj = tomorrow.getTime();
         return dateToString(tomorrowDateObj);
     }
