@@ -5,11 +5,12 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
+import java.util.Calendar;
 import java.util.List;
 
 
 @Table(name = "Tasks")
-public class TaskModel extends Model{
+public class TaskModel extends Model {
     @Column(name = "task_name")
     public String taskName;
     @Column(name = "date")
@@ -17,15 +18,24 @@ public class TaskModel extends Model{
     @Column(name = "time")
     public String time;
 
+
+    @Column(name = "stamp")
+    public long timeStamp;
+
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
     //return a list of all the task obj in the db
-
-
-    public static List<TaskModel>getAllTasks(){
+    public static List<TaskModel> getAllTasks() {
         return new Select().from(TaskModel.class).execute();
     }
-//    public static TaskModel getTaskName(){
-//        return new Select().from(TaskModel.class).orderBy("RANDOM()").executeSingle();
-//    }
+
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;

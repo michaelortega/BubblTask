@@ -85,7 +85,7 @@ public class AddTaskActivity extends Activity {
 
                     Intent intent = new Intent();
                     intent.putExtra("task",taskName);
-                    intent.putExtra("date",dateDue);
+                    intent.putExtra("date",date); // switch this to decide formatting on date 10/10/10 or dateOfWeek , month date(dueDate)
                     intent.putExtra("time",time);
                     intent.putExtra("cal", calToPass);
                     setResult(RESULT_OK,intent);
@@ -190,6 +190,8 @@ public class AddTaskActivity extends Activity {
         }
             return result;
     }
+
+
 
 
 }

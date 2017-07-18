@@ -204,7 +204,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("test", taskName + " " + date + " " + time);
                 Log.i("test", String.valueOf(calendar.getTimeInMillis()));
                 Log.i("test","TIME  "+time);
-                addToDB(taskName, date, time);
+
+                addToDB(taskName, date, time, calendar);
                 setAlarm(calendar.getTimeInMillis(), taskName);
                 Toast.makeText(MainActivity.this, "Task saved", Toast.LENGTH_LONG).show();
 
@@ -263,11 +264,12 @@ public class MainActivity extends AppCompatActivity {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
     }
 
-    private void addToDB(String taskName, String date, String time) {
+    private void addToDB(String taskName, String date, String time, Calendar calendar) {
         TaskModel newTaskModel = new TaskModel();
         newTaskModel.date = date;
         newTaskModel.taskName = taskName;
         newTaskModel.time = time;
+        newTaskModel.timeStamp = calendar.getTimeInMillis();
         newTaskModel.save();
         displayTasks();
     }
