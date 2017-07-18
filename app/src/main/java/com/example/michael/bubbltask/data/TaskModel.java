@@ -27,10 +27,14 @@ public class TaskModel extends Model {
         return timeStamp;
     }
 
-    //return a list of all the task obj in the db
+    //return a list of all the task obj in the db ordered by timeStamp
     public static List<TaskModel> getAllTasks() {
-        return new Select().from(TaskModel.class).execute();
+        return new Select()
+                .from(TaskModel.class)
+                .orderBy("stamp ASC")
+                .execute();
     }
+
 
 
     public void setTimeStamp(long timeStamp) {

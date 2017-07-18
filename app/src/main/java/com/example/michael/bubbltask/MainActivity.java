@@ -32,7 +32,9 @@ import com.example.michael.bubbltask.data.TaskModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,16 +48,15 @@ public class MainActivity extends AppCompatActivity {
     public SwipeMenuListView listView;
 
     private Context mContext;
-    private FragmentTransaction fragmentTransaction;
 
-    private FragmentManager fragmentManager;
-    private View context;
     private int id = 0;
 
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     public static int bubbleHeight = 240;
     public static int bubbleWidth = 240;
     public static boolean isAddingTask;
+   // private Map<Integer, PendingIntent> alarmIDs;
+
 
 
     public Context getmContext() {
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
         }
+
 
 
     }
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                         //delete
                         Log.e("e", "TO DELETE:: " + task.taskName);
                         deleteFromDB(task.getTaskName());
+                        //toDo del alarm
                 }
                 return false;
             }
@@ -203,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.e("test", taskName + " " + date + " " + time);
                 Log.i("test", String.valueOf(calendar.getTimeInMillis()));
-                Log.i("test","TIME  "+time);
+                Log.i("test", "TIME  " + time);
 
                 addToDB(taskName, date, time, calendar);
                 setAlarm(calendar.getTimeInMillis(), taskName);
@@ -255,8 +258,8 @@ public class MainActivity extends AppCompatActivity {
 
         Intent alertIntent = new Intent(MainActivity.this, AlarmReceiver.class);
         alertIntent.putExtra("task", taskName);
-
-        id = ++id + 4; //// TODO: 7/18/2017 uniq
+        Log.i("id", "ID:  " + id);
+        id = ++id; //// TODO: 7/18/2017 uniq
         alertIntent.putExtra("id", id);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, alertIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -293,4 +296,12 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(MainActivity.this, FloatingViewService.class));
     }
 
+    private void initCheckBoxListener() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
