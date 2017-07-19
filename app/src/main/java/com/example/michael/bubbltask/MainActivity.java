@@ -1,15 +1,15 @@
 package com.example.michael.bubbltask;
 
 import android.app.AlarmManager;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 
@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
@@ -32,9 +31,7 @@ import com.example.michael.bubbltask.data.TaskModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,14 +46,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Context mContext;
 
-    private int id = 0;
+    private int alarmID;
 
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     public static int bubbleHeight = 240;
     public static int bubbleWidth = 240;
     public static boolean isAddingTask;
-   // private Map<Integer, PendingIntent> alarmIDs;
-
 
 
     public Context getmContext() {
@@ -69,15 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        ActiveAndroid.initialize(this);
-        ButterKnife.bind(this);
-        setmContext(this);
-        fabListener();
-        initSwipeCreator();
-        displayTasks();
-
         //Check if the application has draw over other apps permission or not?
         //This permission is by default available for API<23. But for API > 23
         //you have to ask for the permission in runtime.
@@ -89,10 +75,29 @@ public class MainActivity extends AppCompatActivity {
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
         }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+        ActiveAndroid.initialize(this);
+        ButterKnife.bind(this);
+        setmContext(this);
+        fabListener();
+        initSwipeCreator();
+        displayTasks();
 
 
 
-    }
+        SharedPreferences sharedPreferences = getSharedPreferences("ID",Context.MODE_PRIVATE);
+        alarmID = sharedPreferences.getInt("alarm_id",0);
+        if (alarmID == Integer.MAX_VALUE) {
+                alarmID = 0;
+            }
+
+        }
+
+
+
+
+
 
 
     private void initSwipeCreator() {
@@ -142,8 +147,10 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         //delete
                         Log.e("e", "TO DELETE:: " + task.taskName);
+                        Log.i("id", "ALARM ID TO REMOVE"+task.alarmID);
+                        Toast.makeText(MainActivity.this,"Task removed",Toast.LENGTH_SHORT).show();
                         deleteFromDB(task.getTaskName());
-                        //toDo del alarm
+                        cancelAlarm(task.getAlarmID());
                 }
                 return false;
             }
@@ -158,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /////////
+
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());
@@ -208,8 +215,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("test", String.valueOf(calendar.getTimeInMillis()));
                 Log.i("test", "TIME  " + time);
 
-                addToDB(taskName, date, time, calendar);
-                setAlarm(calendar.getTimeInMillis(), taskName);
+
+
+                alarmID = ++alarmID;
+
+                saveSettings();
+                addToDB(taskName, date, time, calendar, alarmID);
+                setAlarm(calendar.getTimeInMillis(), taskName, alarmID);
                 Toast.makeText(MainActivity.this, "Task saved", Toast.LENGTH_LONG).show();
 
             }
@@ -253,26 +265,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setAlarm(long timeInMillis, String taskName) {
+    private void setAlarm(long timeInMillis, String taskName, int id) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent alertIntent = new Intent(MainActivity.this, AlarmReceiver.class);
         alertIntent.putExtra("task", taskName);
-        Log.i("id", "ID:  " + id);
-        id = ++id; //// TODO: 7/18/2017 uniq
-        alertIntent.putExtra("id", id);
+        Log.i("id", "alarmID CREATED WITH ID:  " + id);
+        alertIntent.putExtra("alarmID", id);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, alertIntent, PendingIntent.FLAG_ONE_SHOT);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
     }
 
-    private void addToDB(String taskName, String date, String time, Calendar calendar) {
+    private void addToDB(String taskName, String date, String time, Calendar calendar, int id) {
         TaskModel newTaskModel = new TaskModel();
         newTaskModel.date = date;
         newTaskModel.taskName = taskName;
         newTaskModel.time = time;
         newTaskModel.timeStamp = calendar.getTimeInMillis();
+        newTaskModel.alarmID = id;
         newTaskModel.save();
         displayTasks();
     }
@@ -296,12 +308,31 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(MainActivity.this, FloatingViewService.class));
     }
 
-    private void initCheckBoxListener() {
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState);
+    }
+
+
+
+    private void saveSettings() {
+        SharedPreferences sharedPreferences = getSharedPreferences("ID",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("alarm_id", alarmID);
+        editor.commit();
+
+
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private void cancelAlarm(int alarmID) {
+
+
+
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, alarmID, intent, PendingIntent.FLAG_ONE_SHOT);
+        alarmManager.cancel(pIntent);
     }
 }

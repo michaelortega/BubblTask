@@ -22,6 +22,16 @@ public class TaskModel extends Model {
     @Column(name = "stamp")
     public long timeStamp;
 
+    @Column(name = "alarm_id")
+    public int alarmID;
+
+    public int getAlarmID() {
+        return alarmID;
+    }
+
+    public void setAlarmID(int alarmID) {
+        this.alarmID = alarmID;
+    }
 
     public long getTimeStamp() {
         return timeStamp;

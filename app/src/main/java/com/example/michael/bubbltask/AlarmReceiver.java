@@ -22,7 +22,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String taskName = intent.getStringExtra("task");
         int id = intent.getIntExtra("id", 0);
-        Log.i("test", "test");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
